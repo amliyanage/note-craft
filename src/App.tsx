@@ -3,9 +3,10 @@ import {BrowserRouter, Route, Routes} from "react-router-dom";
 import LoginForm from "./components/register/LoginForm.tsx";
 import RegisterForm from "./components/register/RegisterForm.tsx";
 import ForgetPasswordForm from "./components/register/forgetPassword/ForgetPasswordForm.tsx";
-import HomePage from "./components/HomePage.tsx";
+import HomePage from "./components/wall/HomePage.tsx";
 import Dashboard from "./components/Dashboard.tsx";
 import SaveNotePage01 from "./components/wall/SaveNotePage01.tsx";
+import NoteEditor from "./components/wall/NoteEditor.tsx";
 
 function App() {
 
@@ -19,6 +20,7 @@ function App() {
                 <Route path="/dashboard" element={ <Dashboard /> } >
                     <Route path="" element={ <HomePage /> } />
                     <Route path="save" element={ <SaveNotePage01 /> } />
+                    <Route path="edit" element={ <NoteEditor /> } />
                 </Route>
             </Routes>
         </BrowserRouter>

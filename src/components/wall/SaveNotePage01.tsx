@@ -1,6 +1,18 @@
 import {ChevronLeft, ChevronRight, CloudUpload} from "lucide-react";
 import SaveNoteImg from '../../assets/save-note-img.png';
+import {useNavigate} from "react-router-dom";
 const SaveNotePage01 = () => {
+
+    const navigate = useNavigate();
+
+    const handleNext = () => {
+        navigate('/dashboard/edit');
+    }
+
+    const handleBack = () => {
+        navigate('/dashboard');
+    }
+
     return (
         <div className="flex w-full h-[90%] justify-center items-center">
             <div>
@@ -23,11 +35,11 @@ const SaveNotePage01 = () => {
                             <span className="text-[#1DB954]">No File Selected</span>
                         </div>
                         <div className="flex justify-between mt-[43px]">
-                            <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]">
+                            <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]" onClick={handleBack}>
                                 <ChevronLeft size="20px"/>
                                 <span>Back</span>
                             </button>
-                            <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]">
+                            <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]" onClick={handleNext}>
                                 <span>Next</span>
                                 <ChevronRight size="20px"/>
                             </button>

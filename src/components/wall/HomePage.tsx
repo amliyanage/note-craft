@@ -1,7 +1,15 @@
 import { Search , ListFilter , Globe , Star , Plus } from 'lucide-react';
-import NoteCard from "./card/NoteCard.tsx";
+import NoteCard from "../card/NoteCard.tsx";
+import {useNavigate} from "react-router-dom";
 
 const HomePage = () => {
+
+    const navigate = useNavigate();
+
+    const openCreateNote = () => {
+        navigate('/dashboard/save');
+    }
+
     return (
         <div>
             <div className="flex justify-between mt-[43px]">
@@ -25,7 +33,9 @@ const HomePage = () => {
                         <span className="text-[15px] font-[500]">Favorites</span>
                     </button>
                     <button
-                        className=" h-[50px] flex justify-center items-center border-[#000] rounded-[12px] px-5 gap-3 border-[1.5px]">
+                        className=" h-[50px] flex justify-center items-center border-[#000] rounded-[12px] px-5 gap-3 border-[1.5px]"
+                        onClick={openCreateNote}
+                    >
                         <Plus color="#000" size="18px"/>
                         <span className="text-[15px] font-[500]">New Note</span>
                     </button>
