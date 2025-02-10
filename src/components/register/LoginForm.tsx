@@ -30,7 +30,7 @@ const LoginForm = () => {
                             <label className="text-[#000] text-[11px] font-[600]">Password</label>
                             <span
                                 className="text-[11px] font-[400] text-[#000] underline decoration-1">
-                                    <Link to="/">Forgot ?</Link>
+                                    <Link to="/forgot">Forgot ?</Link>
                                 </span>
                         </div>
                         <input type="password"
