@@ -1,16 +1,9 @@
-import profilePic from '../assets/default-profile-pic.png'
 import { Search , ListFilter , Globe , Star , Plus } from 'lucide-react';
 import NoteCard from "./card/NoteCard.tsx";
 
 const HomePage = () => {
     return (
-        <div className="w-full h-screen px-[56px] py-[43px]" id="home">
-            <div className="nav-bar flex justify-between items-center ">
-                <h1 className="text-[#000] text-[30px] font-[400] tracking-[0.96px]">NoteCraft</h1>
-                <div className="profileImg w-[55px] h-[55px] overflow-hidden rounded-full ">
-                    <img src={profilePic} className="object-fill" alt="profile picture"/>
-                </div>
-            </div>
+        <div>
             <div className="flex justify-between mt-[43px]">
                 <div className="flex gap-5">
                     <div className="search border-[1.5px] border-[#828282] rounded-[12px] flex gap-5 items-center p-[14px]">
