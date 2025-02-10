@@ -42,7 +42,7 @@ const LoginForm = () => {
                     </button>
                     <div className="signUp flex items-center gap-1 mb-[33px] mt-[10px]">
                         <span className="text-[12px] font-[400] text-[#000]">Don't have an account ?</span>
-                        <Link to="/" className="text-[12px] font-[400] text-[#000] underline decoration-1">Sign
+                        <Link to="/register" className="text-[12px] font-[400] text-[#000] underline decoration-1">Sign
                             Up</Link>
                     </div>
                     <div className="or flex gap-[15px] items-center mb-[33px]">
