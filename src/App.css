@@ -3,3 +3,11 @@
 *{
     font-family: "Poppins", sans-serif;
 }
+
+#home .nav-bar h1{
+    font-family: "Patrick Hand", cursive;
+}
+
+#home .card:hover .thumbnail img{
+    transform: scale(1.1);
+}
