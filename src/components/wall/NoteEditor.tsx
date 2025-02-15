@@ -26,7 +26,7 @@ const NoteEditor: React.FC = () => {
     const navigate = useNavigate();
 
     const handleNext = () => {
-        navigate('/dashboard');
+        navigate('/dashboard/summery');
     }
 
     const handleBack = () => {
