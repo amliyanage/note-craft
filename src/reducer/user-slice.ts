@@ -1,6 +1,5 @@
 import axios from "axios";
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit";
-import {User} from "../model/User.ts";
 
 const initialState = {
     jwt_token : null,
@@ -17,9 +16,9 @@ const api = axios.create({
 
 export const registerUser = createAsyncThunk(
     "user/register",
-    async (user : User)=> {
+    async (user : FormData)=> {
         try{
-            const  response = await api.post("/auth/register" , {user} , {withCredentials : true})
+            const  response = await api.post("/auth/register" , user , {withCredentials : true})
             return response.data
         } catch (error){
             console.log(error)

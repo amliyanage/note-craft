@@ -11,9 +11,12 @@ import SummeryPage from "./components/wall/SummeryPage.tsx";
 import {useSelector} from "react-redux";
 import {RootState} from "./store/store.ts";
 import {JSX} from "react";
+import Loading from "./components/Loading.tsx";
+import {ToastContainer} from "react-toastify";
 
 function App() {
     const isAuth = useSelector((state : RootState ) => state.userReducer.isAuthenticated);
+    const isLoading = useSelector((state : RootState ) => state.loadingReducer.loading);
 
     const ProtectedRoute = ({ children } : { children : JSX.Element }) => {
         return isAuth ? children : <LoginForm />
@@ -21,6 +24,8 @@ function App() {
 
   return (
     <>
+        {isLoading && <Loading />}
+        <ToastContainer />
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={ <LoginForm /> } />
