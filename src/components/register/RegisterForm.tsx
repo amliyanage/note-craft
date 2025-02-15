@@ -3,6 +3,9 @@ import {Link} from "react-router-dom";
 import registerImg from '../../assets/register-form-img.png'
 
 const RegisterForm = () => {
+
+
+
     return (
         <div className="flex justify-center items-center w-full h-screen">
             <div className="flex justify-center items-center gap-48">
