@@ -1,13 +1,14 @@
-import googleIcon from '../../assets/icons/Google-icon.png'
 import fringerPrintIcon from '../../assets/icons/fringer-print-icon.png'
 import loginImg from '../../assets/login-form-img.png'
 import {Link, useNavigate} from "react-router-dom";
 import {useEffect, useState} from "react";
 import {AppDispatch, RootState} from "../../store/store.ts";
 import {useDispatch, useSelector} from "react-redux";
-import {loginUser} from "../../reducer/user-slice.ts";
+import {googleLogin, loginUser} from "../../reducer/user-slice.ts";
 import {setLoading} from "../../reducer/loading-slice.ts";
 import { Eye, EyeOff } from "lucide-react";
+import {CredentialResponse, GoogleLogin, GoogleOAuthProvider} from "@react-oauth/google";
+import {toast} from "react-toastify";
 
 const LoginForm = () => {
 
@@ -50,18 +51,53 @@ const LoginForm = () => {
         }
     }, []);
 
+    const responseGoogle = async (response: CredentialResponse) => {
+        if (!response.credential) {
+            console.log("Google sign-in failed");
+            return;
+        }
+        setTempLoading(true)
+        const token = response.credential;
+        console.log("Google sign-in successful ",token);
+        const sendToken = {
+            token: token
+        } as { token: string };
+        dispatch(googleLogin(sendToken));
+    };
+
+    const responseGoogleError = (response: CredentialResponse) => {
+        console.log("Google sign-in failed ", response);
+        toast.error('Google sign-in failed.');
+    }
+
 
     return(
         <div className="w-full h-screen flex justify-center items-center">
             <div className="w-auto h-auto flex justify-center items-center gap-44">
                 <form onSubmit={handleLogin} className="w-[450px] flex flex-col items-center">
                     <h6 className="font-[600] text-[28px] text-[000000] mb-[25px]">Sign in to Note Craft</h6>
-                    <button
-                        className="google w-full flex justify-center gap-[16px] border-[1px] items-center border-[#E7E7E9] py-[17px] rounded-[25px] mb-[16px]">
-                        <img src={googleIcon} alt="google icon"/>
-                        <span className="text-[12px] font-[600] text-[#000]">Sign in with Google</span>
-                    </button>
-                    <div className="or flex gap-[15px] items-center mb-[42px]">
+                    {/*<button*/}
+                    {/*    className="google w-full flex justify-center gap-[16px] border-[1px] items-center border-[#E7E7E9] py-[17px] rounded-[25px] mb-[16px]">*/}
+                    {/*    <img src={googleIcon} alt="google icon"/>*/}
+                    {/*    <span className="text-[12px] font-[600] text-[#000]">Sign in with Google</span>*/}
+                    {/*</button>*/}
+
+                    <GoogleOAuthProvider clientId="132334420071-ueo25rncec0jl51hpve4fvl8s73u5t61.apps.googleusercontent.com">
+                        <GoogleLogin
+                            onSuccess={responseGoogle}
+                            onError={() => responseGoogleError}
+                            cookiePolicy='single_host_origin'
+                            theme="outline"
+                            logo_alignment="center"
+                            size="large"
+                            shape="circle"
+                            text="signin_with"
+                            logoAlignment="left"
+                            width={400}
+                        />
+                    </GoogleOAuthProvider>
+
+                    <div className="or flex gap-[15px] items-center mb-[42px] mt-[16px]">
                         <hr className="w-[145px] border-[#E7E7E9]"/>
                         <span className="text-[#6E6D7A] text-[11px] font-[400]">or sign in with email</span>
                         <hr className="w-[145px] border-[#E7E7E9]"/>
