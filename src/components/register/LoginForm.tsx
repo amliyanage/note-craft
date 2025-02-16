@@ -1,13 +1,60 @@
 import googleIcon from '../../assets/icons/Google-icon.png'
 import fringerPrintIcon from '../../assets/icons/fringer-print-icon.png'
 import loginImg from '../../assets/login-form-img.png'
-import {Link} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {AppDispatch, RootState} from "../../store/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {loginUser} from "../../reducer/user-slice.ts";
+import {setLoading} from "../../reducer/loading-slice.ts";
+import { Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
+
+    const isAuth = useSelector((state : RootState ) => state.userReducer.isAuthenticated);
+    const [username, setUsername] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const dispatch = useDispatch<AppDispatch>();
+    const [tempLoading, setTempLoading] = useState<boolean>(false);
+    const isLoading = useSelector((state : RootState ) => state.userReducer.loading);
+    const navigate = useNavigate()
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+
+    useEffect(() => {
+        console.log("isAuth", isAuth)
+        if(isAuth){
+            navigate("/dashboard")
+        }
+    }, [isAuth]);
+
+    const handleLogin = (e : React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        setTempLoading(true)
+        const loginData = {
+            userName: username,
+            password: password
+        }
+        dispatch(loginUser(loginData))
+    }
+
+    useEffect(() => {
+        setTempLoading(true)
+    }, [!isLoading]);
+
+    useEffect(() => {
+        if(isLoading){
+            dispatch(setLoading(true))
+        } else if (!isLoading && tempLoading){
+            dispatch(setLoading(false))
+            navigate("/dashboard")
+        }
+    }, []);
+
+
     return(
         <div className="w-full h-screen flex justify-center items-center">
             <div className="w-auto h-auto flex justify-center items-center gap-44">
-                <form action="" className="w-[450px] flex flex-col items-center">
+                <form onSubmit={handleLogin} className="w-[450px] flex flex-col items-center">
                     <h6 className="font-[600] text-[28px] text-[000000] mb-[25px]">Sign in to Note Craft</h6>
                     <button
                         className="google w-full flex justify-center gap-[16px] border-[1px] items-center border-[#E7E7E9] py-[17px] rounded-[25px] mb-[16px]">
@@ -20,8 +67,9 @@ const LoginForm = () => {
                         <hr className="w-[145px] border-[#E7E7E9]"/>
                     </div>
                     <div className="w-full mb-[25px]">
-                        <label className="text-[#000] text-[11px] font-[600] mb-[4px]">Username or Email</label>
+                        <label className="text-[#000] text-[11px] font-[600] mb-[4px]">Username</label>
                         <input
+                            onChange={(e) => setUsername(e.target.value)}
                             className="w-full border-[2px] border-[#E7E7E9] h-[50px] p-[10px] font-[18px] font-[600] rounded-[9x]"
                             type="text"/>
                     </div>
@@ -33,8 +81,21 @@ const LoginForm = () => {
                                     <Link to="/forgot">Forgot ?</Link>
                                 </span>
                         </div>
-                        <input type="password"
-                               className="w-full border-[2px] border-[#E7E7E9] h-[50px] p-[10px] font-[18px] font-[600] rounded-[9x]"/>
+                        {/* Password Input Field */}
+                        <div className="relative">
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="w-full border-[2px] border-[#E7E7E9] h-[50px] p-[10px] font-[18px] font-[600] rounded-[9px] pr-10"
+                            />
+                            {/* Eye Icon Button */}
+                            <button
+                                type="button"
+                                onClick={() => setShowPassword(!showPassword)}
+                                className="absolute inset-y-0 right-3 flex items-center text-gray-600">
+                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                            </button>
+                        </div>
                     </div>
                     <button type="submit"
                             className="w-full flex justify-center border-[1px] py-[17px] rounded-[25px] bg-[#000] font-[600] text-[12px] text-[#FFF] mb-[14px]">Sign

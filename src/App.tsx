@@ -13,7 +13,6 @@ import {RootState} from "./store/store.ts";
 import {JSX} from "react";
 import Loading from "./components/Loading.tsx";
 import {ToastContainer} from "react-toastify";
-import {GoogleOAuthProvider} from "@react-oauth/google";
 
 function App() {
     const isAuth = useSelector((state : RootState ) => state.userReducer.isAuthenticated);
