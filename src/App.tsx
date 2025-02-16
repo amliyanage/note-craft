@@ -13,6 +13,7 @@ import {RootState} from "./store/store.ts";
 import {JSX} from "react";
 import Loading from "./components/Loading.tsx";
 import {ToastContainer} from "react-toastify";
+import {GoogleOAuthProvider} from "@react-oauth/google";
 
 function App() {
     const isAuth = useSelector((state : RootState ) => state.userReducer.isAuthenticated);
@@ -26,25 +27,25 @@ function App() {
     <>
         {isLoading && <Loading />}
         <ToastContainer />
-        <BrowserRouter>
-            <Routes>
-                <Route path="/" element={ <LoginForm /> } />
-                <Route path="/register" element={ <RegisterForm /> } />
-                <Route path="/forgot" element={ <ForgetPasswordForm /> } />
+            <BrowserRouter>
+                <Routes>
+                    <Route path="/" element={ <LoginForm /> } />
+                    <Route path="/register" element={ <RegisterForm /> } />
+                    <Route path="/forgot" element={ <ForgetPasswordForm /> } />
 
-                <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                        <Dashboard />
-                    </ProtectedRoute>
-                } >
-                    <Route path="" element={ <HomePage /> } />
-                    <Route path="save" element={ <SaveNotePage01 /> } />
-                    <Route path="edit" element={ <NoteEditor /> } />
-                    <Route path="summery" element={ <SummeryPage /> } />
-                </Route>
+                    <Route path="/dashboard" element={
+                        <ProtectedRoute>
+                            <Dashboard />
+                        </ProtectedRoute>
+                    } >
+                        <Route path="" element={ <HomePage /> } />
+                        <Route path="save" element={ <SaveNotePage01 /> } />
+                        <Route path="edit" element={ <NoteEditor /> } />
+                        <Route path="summery" element={ <SummeryPage /> } />
+                    </Route>
 
-            </Routes>
-        </BrowserRouter>
+                </Routes>
+            </BrowserRouter>
     </>
   )
 }

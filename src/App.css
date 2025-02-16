@@ -11,3 +11,21 @@
 #home .card:hover .thumbnail img{
     transform: scale(1.1);
 }
+
+div:has(> .S9gUrf-YoZ4jf) {
+    width: 100%;
+    height: auto !important;
+}
+
+.S9gUrf-YoZ4jf .nsm7Bb-HzV7m-LgbsSe {
+    height: 4.5vh;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.S9gUrf-YoZ4jf .nsm7Bb-HzV7m-LgbsSe-BPrWId{
+    font-weight: 600;
+    font-family: Poppins, serif !important;
+    font-size: 14px !important;
+    margin-left: 10px;
+}

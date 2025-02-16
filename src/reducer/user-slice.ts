@@ -26,6 +26,19 @@ export const registerUser = createAsyncThunk(
     }
 )
 
+export const googleSignUp = createAsyncThunk(
+    "user/google-signup",
+    async (token : { token : string })=> {
+        try{
+            console.log("yanatoken ",token)
+            const response = await api.post("/auth/google-signup", { token }, { withCredentials: true });
+            return response.data
+        } catch (error){
+            console.log(error)
+        }
+    }
+)
+
 const userSlice = createSlice({
     name: "userReducer",
     initialState,
@@ -46,6 +59,20 @@ const userSlice = createSlice({
             })
             .addCase(registerUser.rejected , (state, action) => {
                 console.log("Error Registering User")
+                state.loading = false
+                state.error = action.payload as string;
+            })
+        builder
+            .addCase(googleSignUp.pending , (state) => {
+                console.log("Google Signing Up")
+                state.loading = true
+            })
+            .addCase(googleSignUp.fulfilled , (state) => {
+                console.log("Google Signed Up")
+                state.loading = false
+            })
+            .addCase(googleSignUp.rejected , (state, action) => {
+                console.log("Error Google Signing Up")
                 state.loading = false
                 state.error = action.payload as string;
             })
