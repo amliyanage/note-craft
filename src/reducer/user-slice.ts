@@ -8,7 +8,8 @@ const initialState = {
     username : null,
     isAuthenticated : false,
     loading : false,
-    error: ""
+    error: "",
+    forgotPassword : false
 }
 
 const api = axios.create({
@@ -60,6 +61,36 @@ export const googleLogin = createAsyncThunk(
     async (token : { token : string }) => {
         try {
             const response = await api.post("/auth/google-login", token, { withCredentials: true });
+            return {
+                status : response.status,
+                ... response.data
+            }
+        } catch (error){
+            console.log(error)
+        }
+    }
+)
+
+export const verifyEmail = createAsyncThunk(
+    "user/verify-email",
+    async (email : string) => {
+        try {
+            const response = await api.post("/auth/send-email/"+email , { withCredentials: true });
+            return {
+                status : response.status,
+                ... response.data
+            }
+        } catch (error){
+            console.log(error)
+        }
+    }
+)
+
+export const CheckOTP = createAsyncThunk(
+    "user/verify-otp",
+    async ({email , otp} : { email : string , otp :string }) => {
+        try {
+            const response = await api.post("/auth/verify-otp/"+email+"/"+otp , { withCredentials: true });
             return {
                 status : response.status,
                 ... response.data
@@ -153,7 +184,54 @@ const userSlice = createSlice({
                 console.log("Error Google Logging In")
                 state.loading = false
                 state.error = action.payload as string;
+                state.forgotPassword = false
                 toast.error("Invalid Credentials")
+            })
+        builder
+            .addCase(verifyEmail.pending , (state) => {
+                console.log("Verifying Email")
+                state.loading = true
+            })
+            .addCase(verifyEmail.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload && action.payload.status === 201){
+                    state.forgotPassword = true
+                    toast.success("Email Sent")
+                } else {
+                    toast.error("Invalid Email")
+                }
+            })
+            .addCase(verifyEmail.rejected , (state, action) => {
+                console.log("Error Verifying Email")
+                state.loading = false
+                state.error = action.payload as string;
+                state.forgotPassword = false
+                toast.error("Invalid Email")
+            })
+        builder
+            .addCase(CheckOTP.pending , (state) => {
+                console.log("Verifying OTP")
+                state.loading = true
+            })
+            .addCase(CheckOTP.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload && action.payload.status === 201){
+                    state.forgotPassword = false
+                    toast.success("OTP Verified")
+                    state.isAuthenticated = true
+                    state.jwt_token = action.payload.jwt_token
+                    state.refresh_token = action.payload.refresh_token
+                    state.username = action.payload.username
+                } else {
+                    toast.error("Invalid OTP")
+                }
+            })
+            .addCase(CheckOTP.rejected , (state, action) => {
+                console.log("Error Verifying OTP")
+                state.loading = false
+                state.error = action.payload as string;
+                state.forgotPassword = false
+                toast.error("Invalid OTP")
             })
     }
 })
