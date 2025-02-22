@@ -3,6 +3,7 @@ import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ChevronLeft, ChevronRight, Mic, MicOff } from "lucide-react";
 import {useNavigate} from "react-router-dom";
+import {useForm} from "./FormContext.tsx";
 
 // Toolbar options with color and highlight options
 const toolbarOptions = [
@@ -20,10 +21,15 @@ const toolbarOptions = [
 ];
 
 const NoteEditor: React.FC = () => {
-    const [content, setContent] = useState<string>(""); // State to store content
+    const { formData , updateFormData } = useForm()
+    const [content, setContent] = useState<string>(formData.noteBody || ""); // Content state
     const [isListening, setIsListening] = useState<boolean>(false); // Track voice typing state
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null); // SpeechRecognition instance
     const navigate = useNavigate();
+
+    useEffect(() => {
+        updateFormData("noteBody", content)
+    }, [ content ]);
 
     const handleNext = () => {
         navigate('/dashboard/summery');

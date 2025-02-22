@@ -142,13 +142,13 @@ const LoginForm = () => {
                         <Link to="/register" className="text-[12px] font-[400] text-[#000] underline decoration-1">Sign
                             Up</Link>
                     </div>
-                    <div className="or flex gap-[15px] items-center mb-[33px]">
-                        <hr className="w-[145px] border-[#E7E7E9]"/>
-                        <span className="text-[#6E6D7A] text-[11px] font-[400]">or</span>
-                        <hr className="w-[145px] border-[#E7E7E9]"/>
-                    </div>
+                    {/*<div className="or flex gap-[15px] items-center mb-[33px]">*/}
+                    {/*    <hr className="w-[145px] border-[#E7E7E9]"/>*/}
+                    {/*    <span className="text-[#6E6D7A] text-[11px] font-[400]">or</span>*/}
+                    {/*    <hr className="w-[145px] border-[#E7E7E9]"/>*/}
+                    {/*</div>*/}
                     <div className="fringerprint">
-                        <img className="h-[36px] w-[36px]" src={fringerPrintIcon} alt="fringer print icon"/>
+                        {/*<img className="h-[36px] w-[36px]" src={fringerPrintIcon} alt="fringer print icon"/>*/}
                     </div>
                 </form>
                 <div className="flex justify-center items-center">

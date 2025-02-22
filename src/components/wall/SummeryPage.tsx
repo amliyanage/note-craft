@@ -1,37 +1,57 @@
-import { useState } from "react";
-import {Pencil, Loader, ChevronLeft, ChevronRight} from "lucide-react";
+import { useEffect, useState } from "react";
+import { Pencil, Loader, ChevronLeft } from "lucide-react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "./FormContext.tsx";
+import { AppDispatch, RootState } from "../../store/store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { setLoading } from "../../reducer/loading-slice.ts";
+import { saveNote } from "../../reducer/note-slice.ts";
 
-const DEFAULT_TEXT =
-    "Artificial Intelligence (AI) is a branch of computer science " +
-    "that aims to create machines that can perform tasks that typically " +
-    "require human intelligence. These tasks include learning, reasoning, " +
-    "problem-solving, perception, and language understanding. AI has applications " +
-    "in various fields, including healthcare, finance, and autonomous systems.";
+// Function to strip HTML tags from a string
+const stripHtmlTags = (str: string) => {
+    const doc = new DOMParser().parseFromString(str, 'text/html');
+    return doc.body.textContent || "";
+};
 
 const SummeryPage = () => {
-    const [text, setText] = useState(DEFAULT_TEXT);
-    const [loading, setLoading] = useState(false);
+    const { formData, updateFormData } = useForm();
+    const [text, setText] = useState(stripHtmlTags(formData.noteBody as string) || ""); // Cleaned text from formData
+    const [editLoading, setEditLoading] = useState(false);
     const navigate = useNavigate();
+    const [tempLoading, setTempLoading] = useState<boolean>(false);
+    const isLoading = useSelector((state: RootState) => state.noteReducer.loading);
+    const dispatch = useDispatch<AppDispatch>();
+    const username = useSelector((state: RootState) => state.userReducer.username);
+    const jwt_token = useSelector((state: RootState) => state.userReducer.jwt_token);
 
-    const handleNext = () => {
-        navigate('/dashboard');
-    }
+    useEffect(() => {
+        setTempLoading(true)
+    }, [!isLoading]);
+
+    useEffect(() => {
+        if (isLoading) {
+            dispatch(setLoading(true))
+        } else if (!isLoading && tempLoading) {
+            setTempLoading(false)
+            dispatch(setLoading(false))
+            navigate('/dashboard');
+        }
+    }, [isLoading]);
 
     const handleBack = () => {
         navigate('/dashboard/edit');
-    }
+    };
 
     const generateSummary = async () => {
-        setLoading(true);
+        setEditLoading(true);
         try {
             const response = await axios.post(
                 "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
                 { inputs: text },
                 {
                     headers: {
-                        Authorization: "Bearer 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",
+                        Authorization: `Bearer ${process.env.REACT_APP_HUGGINGFACE_API_KEY}`, // Secure API Key
                         "Content-Type": "application/json",
                     },
                 }
@@ -42,7 +62,30 @@ const SummeryPage = () => {
             console.error("Error generating summary:", error);
             setText((prevText) => prevText + "\n\nFailed to generate summary.");
         }
-        setLoading(false);
+        setEditLoading(false);
+    };
+
+    useEffect(() => {
+        updateFormData("summery", text);
+    }, [text]);
+
+    const handleSave = () => {
+        setEditLoading(true);
+        const sendFormData = new FormData();
+        sendFormData.append("thumbnail", formData.thumbnail as File);
+        sendFormData.append("title", formData.title as string);
+        sendFormData.append("noteBody", formData.noteBody as string);
+        sendFormData.append("summery", text);
+        sendFormData.append("status", "public");
+        sendFormData.append("visibility", formData.visibility as string);
+        sendFormData.append("userName", username ?? "Guest");
+        sendFormData.append("isFavourite", "false");
+
+        dispatch(saveNote({
+            note: sendFormData,
+            jwt_token: jwt_token ?? ""
+        }));
+
     };
 
     return (
@@ -52,9 +95,9 @@ const SummeryPage = () => {
                 <button
                     onClick={generateSummary}
                     className="absolute top-4 right-4 text-gray-500 hover:text-blue-500 transition"
-                    disabled={loading}
+                    disabled={editLoading}
                 >
-                    {loading ? <Loader className="animate-spin w-5 h-5"/> : <Pencil/>}
+                    {editLoading ? <Loader className="animate-spin w-5 h-5" /> : <Pencil />}
                 </button>
                 <textarea
                     className="w-full min-h-[60vh] border-2 p-4 rounded-xl border-gray-300"
@@ -64,13 +107,13 @@ const SummeryPage = () => {
                 <div className="flex justify-between mt-[43px] w-full">
                     <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]"
                             onClick={handleBack}>
-                        <ChevronLeft size="20px"/>
+                        <ChevronLeft size="20px" />
                         <span>Back</span>
                     </button>
-                    <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]"
-                            onClick={handleNext}>
-                        <span>Next</span>
-                        <ChevronRight size="20px"/>
+                    <button
+                        className="flex items-center gap-3 bg-black text-[#fff] p-3 px-12 rounded-[12px]"
+                        onClick={handleSave}>
+                        <span>Save</span>
                     </button>
                 </div>
             </div>

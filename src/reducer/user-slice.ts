@@ -148,8 +148,8 @@ const userSlice = createSlice({
                 state.loading = false
                 if (action.payload && action.payload.status === 201){
                     state.isAuthenticated = true
-                    state.jwt_token = action.payload.jwt_token
-                    state.refresh_token = action.payload.refresh_token
+                    state.jwt_token = action.payload.token
+                    state.refresh_token = action.payload.refreshToken
                     state.username = action.payload.username
                     toast.success("Logged In")
                 } else {
@@ -172,8 +172,8 @@ const userSlice = createSlice({
                 state.loading = false
                 if (action.payload && action.payload.status === 201){
                     state.isAuthenticated = true
-                    state.jwt_token = action.payload.jwt_token
-                    state.refresh_token = action.payload.refresh_token
+                    state.jwt_token = action.payload.token
+                    state.refresh_token = action.payload.refreshToken
                     state.username = action.payload.username
                     toast.success("Logged In")
                 } else {
@@ -219,8 +219,8 @@ const userSlice = createSlice({
                     state.forgotPassword = false
                     toast.success("OTP Verified")
                     state.isAuthenticated = true
-                    state.jwt_token = action.payload.jwt_token
-                    state.refresh_token = action.payload.refresh_token
+                    state.jwt_token = action.payload.token
+                    state.refresh_token = action.payload.refreshToken
                     state.username = action.payload.username
                 } else {
                     toast.error("Invalid OTP")

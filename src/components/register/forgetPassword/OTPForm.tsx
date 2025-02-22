@@ -75,14 +75,14 @@ const OTPForm = ({email} : {email : string}) => {
                 <Link to="/" className="text-[13px] font-[400] text-[#000] underline decoration-1">Sign
                     In</Link>
             </div>
-            <div className="or flex gap-[15px] items-center mb-[33px]">
-                <hr className="w-[145px] border-[#E7E7E9]"/>
-                <span className="text-[#6E6D7A] text-[12px] font-[400]">or</span>
-                <hr className="w-[145px] border-[#E7E7E9]"/>
-            </div>
-            <div className="fringerprint">
-                <img className="h-[36px] w-[36px]" src={fringerprint} alt="fringer print icon"/>
-            </div>
+            {/*<div className="or flex gap-[15px] items-center mb-[33px]">*/}
+            {/*    <hr className="w-[145px] border-[#E7E7E9]"/>*/}
+            {/*    <span className="text-[#6E6D7A] text-[12px] font-[400]">or</span>*/}
+            {/*    <hr className="w-[145px] border-[#E7E7E9]"/>*/}
+            {/*</div>*/}
+            {/*<div className="fringerprint">*/}
+            {/*    /!*<img className="h-[36px] w-[36px]" src={fringerprint} alt="fringer print icon"/>*!/*/}
+            {/*</div>*/}
         </form>
     )
 }
