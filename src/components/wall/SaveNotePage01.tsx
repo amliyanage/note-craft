@@ -36,9 +36,10 @@ const SaveNotePage01 = () => {
                                 <label className="text-[16px] font-[500]">Visibility</label>
                                 <select
                                     onChange={(e) => updateFormData("visibility", e.target.value)}
-                                    defaultValue={formData.visibility || "private"}
+                                    defaultValue={formData.visibility || ""}
                                     className="rounded-[12px] border-[1.5px] border-[#E7E7E90] text-[18px] font-[500] p-3 w-[30vw] mt-[5px] bg-white"
                                 >
+                                    <option value="" disabled>Select Visibility</option>
                                     <option value="private">Private</option>
                                     <option value="public">Public</option>
                                 </select>

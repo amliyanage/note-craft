@@ -32,6 +32,23 @@ export const saveNote = createAsyncThunk(
         }
     }
 )
+
+export const getAllUserNotes = createAsyncThunk(
+    "note/get-all-notes",
+    async ({ username, jwt_token }: { username: string, jwt_token: string }) => {
+        try {
+            const response = await api.get(`/note/getNoteByUser/${username}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt_token}`,
+                }
+            });
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
 const noteSlice = createSlice({
     name : "note",
     initialState,
@@ -55,6 +72,18 @@ const noteSlice = createSlice({
                 state.loading = false
                 state.error = action.error.message || ""
                 toast.error("Failed to save note")
+            }) ,
+        builder
+            .addCase(getAllUserNotes.pending , (state) => {
+                state.loading = true
+            })
+            .addCase(getAllUserNotes.fulfilled , (state , action) => {
+                state.loading = false
+                state.notes = action.payload
+            })
+            .addCase(getAllUserNotes.rejected , (state , action) => {
+                state.loading = false
+                state.error = action.error.message || ""
             })
     }
 })
