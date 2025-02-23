@@ -7,7 +7,6 @@ import { AppDispatch, RootState } from "../../store/store.ts";
 import {getAllUserNotes, getPublicNotes} from "../../reducer/note-slice.ts";
 import { Note } from "../../model/Note.ts";
 import { useForm } from "./FormContext.tsx";
-import {setLoading} from "../../reducer/loading-slice.ts";
 
 const HomePage = () => {
     const navigate = useNavigate();
