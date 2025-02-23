@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from "../../store/store.ts";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading } from "../../reducer/loading-slice.ts";
 import { saveNote } from "../../reducer/note-slice.ts";
+import {getSummery} from "../../util/SummeryGenerate.ts";
 
 // Function to strip HTML tags from a string
 const stripHtmlTags = (str: string) => {
@@ -16,7 +17,7 @@ const stripHtmlTags = (str: string) => {
 
 const SummeryPage = () => {
     const { formData, updateFormData } = useForm();
-    const [text, setText] = useState(stripHtmlTags(formData.noteBody as string) || "");
+    const [text, setText] = useState("");
     const [editLoading, setEditLoading] = useState(false);
     const navigate = useNavigate();
     const [tempLoading, setTempLoading] = useState<boolean>(false);
@@ -45,19 +46,12 @@ const SummeryPage = () => {
 
     const generateSummary = async () => {
         setEditLoading(true);
+        const text = stripHtmlTags(formData.noteBody as string);
+        console.log("Text:", text);
         try {
-            const response = await axios.post(
-                "https://api-inference.huggingface.co/models/facebook/bart-large-cnn",
-                { inputs: text },
-                {
-                    headers: {
-                        Authorization: `Bearer ${process.env.REACT_APP_HUGGINGFACE_API_KEY}`, // Secure API Key
-                        "Content-Type": "application/json",
-                    },
-                }
-            );
-            const newSummary = response.data[0].summary_text;
-            setText((prevText) => prevText + "\n\n" + newSummary);
+            const newSummary = await getSummery()({ summary: text, jwt_token: jwt_token ?? "" });
+            console.log("New summary:", newSummary);
+            setText((prevText) => prevText + "\n\n" + newSummary.summary);
         } catch (error) {
             console.error("Error generating summary:", error);
             setText((prevText) => prevText + "\n\nFailed to generate summary.");
