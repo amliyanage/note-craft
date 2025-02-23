@@ -4,9 +4,10 @@ import {useEffect} from "react";
 
 interface NoteProps {
     note: Note
+    onClick: (note: Note) => void
 }
 
-const NoteCard = ({note} : NoteProps) => {
+const NoteCard = ({note , onClick} : NoteProps) => {
     useEffect(() => {
         console.log(note)
     }, []);
@@ -23,7 +24,9 @@ const NoteCard = ({note} : NoteProps) => {
     }
 
     return (
-        <div className="w-[20vw] flex flex-col card">
+        <div className="w-[20vw] flex flex-col card"
+            onClick={() => onClick(note)}
+        >
             <div className="w-full h-[25vh] flex overflow-hidden thumbnail rounded-[18px]">
                 <img src={note.thumbnail as string} className="object-cover w-full h-full" alt="Note Project Image"/>
             </div>

@@ -49,6 +49,26 @@ export const getAllUserNotes = createAsyncThunk(
     }
 )
 
+export const updateNote = createAsyncThunk(
+    "note/update-note",
+    async ({ note, jwt_token }: { note: FormData, jwt_token: string }) => {
+        try {
+            const response = await api.put("/note/update/"+note.get("noteId"), note, {
+                headers: {
+                    Authorization: `Bearer ${jwt_token}`,
+                    "Content-Type": "multipart/form-data",
+                }
+            });
+            return {
+                comingStatus: response.status,
+                ...response.data
+            };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+)
+
 const noteSlice = createSlice({
     name : "note",
     initialState,
@@ -84,6 +104,29 @@ const noteSlice = createSlice({
             .addCase(getAllUserNotes.rejected , (state , action) => {
                 state.loading = false
                 state.error = action.error.message || ""
+            })
+        builder
+            .addCase(updateNote.pending , (state) => {
+                state.loading = true
+            })
+            .addCase(updateNote.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload.comingStatus === 200){
+                    state.notes = state.notes.map(note => {
+                        if (note.noteId === action.payload.noteId){
+                            return action.payload
+                        }
+                        return note
+                    })
+                    toast.success("Note updated successfully")
+                }else {
+                    toast.error("Failed to update note")
+                }
+            })
+            .addCase(updateNote.rejected , (state , action) => {
+                state.loading = false
+                state.error = action.error.message || ""
+                toast.error("Failed to update note")
             })
     }
 })

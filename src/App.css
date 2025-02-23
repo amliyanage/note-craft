@@ -29,3 +29,7 @@ div:has(> .S9gUrf-YoZ4jf) {
     font-size: 14px !important;
     margin-left: 10px;
 }
+
+#viewNote p {
+    text-align: center;
+}

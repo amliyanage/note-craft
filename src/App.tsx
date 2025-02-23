@@ -13,6 +13,7 @@ import {RootState} from "./store/store.ts";
 import {JSX} from "react";
 import Loading from "./components/Loading.tsx";
 import {ToastContainer} from "react-toastify";
+import ViewNote from "./components/wall/ViewNote.tsx";
 
 function App() {
     const isAuth = useSelector((state : RootState ) => state.userReducer.isAuthenticated);
@@ -41,6 +42,7 @@ function App() {
                         <Route path="save" element={ <SaveNotePage01 /> } />
                         <Route path="edit" element={ <NoteEditor /> } />
                         <Route path="summery" element={ <SummeryPage /> } />
+                        <Route path="view" element={ <ViewNote /> } />
                     </Route>
 
                 </Routes>

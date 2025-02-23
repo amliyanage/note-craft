@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store.ts";
 import { getAllUserNotes } from "../../reducer/note-slice.ts";
 import { Note } from "../../model/Note.ts";
+import {useForm} from "./FormContext.tsx";
 
 const HomePage = () => {
     const navigate = useNavigate();
+    const { formData, updateFormData } = useForm();
     const [tempLoading, setTempLoading] = useState<boolean>(false);
     const [searchTerm, setSearchTerm] = useState<string>(""); // State for search input
     const isLoading = useSelector((state: RootState) => state.noteReducer.loading);
@@ -41,6 +43,21 @@ const HomePage = () => {
     const filteredNotes = notes.filter((note: Note) =>
         note.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
+
+    function onClick(note: Note) {
+        updateFormData("title" , note.title )
+        updateFormData("noteBody" , note.noteBody )
+        updateFormData("noteId" , note.noteId )
+        updateFormData("date" , note.date )
+        updateFormData("summery" , note.summery )
+        updateFormData("thumbnail" , note.thumbnail )
+        updateFormData("isFavourite" , note.isFavourite)
+        updateFormData("visibility" , note.visibility)
+        updateFormData("status" , note.status)
+        updateFormData("userName" , note.userName)
+
+        navigate("/dashboard/view");
+    }
 
     return (
         <div>
@@ -86,7 +103,7 @@ const HomePage = () => {
                 ) : (
                     <div className="grid grid-cols-4 gap-16">
                         {filteredNotes.map((note: Note) => (
-                            <NoteCard key={note.noteId} note={note} />
+                            <NoteCard key={note.noteId} note={note} onClick={onClick} />
                         ))}
                     </div>
                 )}

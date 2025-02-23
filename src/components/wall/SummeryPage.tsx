@@ -16,7 +16,7 @@ const stripHtmlTags = (str: string) => {
 
 const SummeryPage = () => {
     const { formData, updateFormData } = useForm();
-    const [text, setText] = useState(stripHtmlTags(formData.noteBody as string) || ""); // Cleaned text from formData
+    const [text, setText] = useState(stripHtmlTags(formData.noteBody as string) || "");
     const [editLoading, setEditLoading] = useState(false);
     const navigate = useNavigate();
     const [tempLoading, setTempLoading] = useState<boolean>(false);

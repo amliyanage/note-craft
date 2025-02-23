@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { ChevronLeft, ChevronRight, Mic, MicOff } from "lucide-react";
-import {useNavigate} from "react-router-dom";
-import {useForm} from "./FormContext.tsx";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "./FormContext.tsx";
 
 // Toolbar options with color and highlight options
-const toolbarOptions = [
+export const toolbarOptions = [
     [{ font: [] }, { size: [] }],
     ["bold", "italic", "underline", "strike"],
     [{ color: [] }, { background: [] }], // Color and highlight options
@@ -21,23 +21,26 @@ const toolbarOptions = [
 ];
 
 const NoteEditor: React.FC = () => {
-    const { formData , updateFormData } = useForm()
+    const { formData, updateFormData } = useForm();
     const [content, setContent] = useState<string>(formData.noteBody || ""); // Content state
     const [isListening, setIsListening] = useState<boolean>(false); // Track voice typing state
     const [recognition, setRecognition] = useState<SpeechRecognition | null>(null); // SpeechRecognition instance
     const navigate = useNavigate();
 
+    // Update form data whenever content changes
     useEffect(() => {
-        updateFormData("noteBody", content)
-    }, [ content ]);
+        updateFormData("noteBody", content);
+    }, [content]);
 
+    // Navigation handler for "Next" button
     const handleNext = () => {
-        navigate('/dashboard/summery');
-    }
+        navigate("/dashboard/summery");
+    };
 
+    // Navigation handler for "Back" button
     const handleBack = () => {
-        navigate('/dashboard/save');
-    }
+        navigate("/dashboard/save");
+    };
 
     // Initialize SpeechRecognition if supported
     useEffect(() => {
@@ -86,21 +89,24 @@ const NoteEditor: React.FC = () => {
         <div className="px-[10vw]">
             {/* Navigation buttons */}
             <div className="flex justify-between mt-[58px] mb-[58px]">
-                <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]" onClick={handleBack}>
+                <button
+                    className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]"
+                    onClick={handleBack}
+                >
                     <ChevronLeft size="20px" />
                     <span>Back</span>
                 </button>
-                <button className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]" onClick={handleNext}>
+                <button
+                    className="flex items-center gap-3 bg-black text-[#fff] p-3 px-7 rounded-[12px]"
+                    onClick={handleNext}
+                >
                     <span>Next</span>
                     <ChevronRight size="20px" />
                 </button>
             </div>
 
             {/* Button to toggle voice typing */}
-            <button
-                onClick={toggleListening}
-                className="float-end mt-[9px] me-[9px]"
-            >
+            <button onClick={toggleListening} className="float-end mt-[9px] me-[9px]">
                 {isListening ? <MicOff size="22px" /> : <Mic size="22px" />}
             </button>
 
