@@ -1,50 +1,62 @@
-# React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Note Craft 📝
 
-Currently, two official plugins are available:
+**Note Craft** is a versatile, easy-to-use note-taking application that allows users to organize and manage their notes seamlessly. Whether you need to jot down quick thoughts, create detailed documents, or manage notes, **Note Craft** has the features you need to stay organized and productive.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features ✨
 
-## Expanding the ESLint configuration
+- **Rich Text Support**: Format your notes with headings, lists, bold, italics, and more.
+- **Search Functionality**: Easily find your notes with a powerful search feature.
+- **Tagging**: Organize your notes using tags for better categorization.
+- **Cross-Platform Sync**: Sync your notes across multiple devices.
+- **Simple & Clean UI**: Minimalistic design for an enjoyable writing experience.
+  
+## Technologies Used 🚀
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+- **Frontend**: [React](https://reactjs.org/)
+- **Backend**: [Node.js](https://nodejs.org/) (if applicable)
+- **Database**: [MongoDB](https://www.mongodb.com/) (if applicable)
+- **Authentication**: [JWT](https://jwt.io/) or OAuth (if applicable)
 
-- Configure the top-level `parserOptions` property like this:
+## Installation 🔧
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+To get started with **Note Craft**, follow these steps:
+
+### 1. Clone the repository:
+
+```bash
+git clone https://github.com/amliyanage/note-craft.git
 ```
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+### 2. Install dependencies:
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+For Node.js-based projects:
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
+```bash
+cd note-craft
+npm install
 ```
+
+### 3. Start the application:
+
+```bash
+npm start
+```
+
+### 4. Visit the app:
+
+Open your browser and go to `http://localhost:3000` (or the specified port) to start using **Note Craft**.
+
+## Usage 💻
+
+Once the app is running, you'll be able to:
+
+1. **Create Notes**: Use the interface to create new notes.
+2. **Edit Notes**: Modify your notes with rich text formatting options.
+3. **Search Notes**: Find specific notes by keywords or tags.
+4. **Organize Notes**: Add tags to your notes for easy categorization.
+
+## License 📜
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
