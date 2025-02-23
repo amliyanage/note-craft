@@ -1,6 +1,9 @@
 import {ArrowDownToLine, Star} from 'lucide-react';
 import {Note} from "../../model/Note.ts";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
+import {AppDispatch, RootState} from "../../store/store.ts";
+import {useDispatch, useSelector} from "react-redux";
+import {chaneFavourite} from "../../reducer/note-slice.ts";
 
 interface NoteProps {
     note: Note
@@ -8,9 +11,9 @@ interface NoteProps {
 }
 
 const NoteCard = ({note , onClick} : NoteProps) => {
-    useEffect(() => {
-        console.log(note)
-    }, []);
+    const dispatch = useDispatch<AppDispatch>();
+    const isAuth = useSelector((state: RootState) => state.userReducer.jwt_token);
+    const [isFavourite, setIsFavourite] = useState<string>(note.isFavourite as string);
     function getNoteDate(date?: string) {
         const noteDate = new Date(date);
         return `${noteDate.getDate()} / ${noteDate.getMonth()} / ${noteDate.getFullYear()}`
@@ -23,11 +26,26 @@ const NoteCard = ({note , onClick} : NoteProps) => {
         return name
     }
 
+    const handleChangeFavorite = () => {
+        console.log(isFavourite)
+        const newFavouriteStatus = isFavourite === "true" ? "false" : "true";
+        dispatch(
+            chaneFavourite({
+                noteId: note.noteId as string,
+                isFavourite: newFavouriteStatus,
+                jwt_token: isAuth ?? ""
+            })
+        );
+        setIsFavourite(newFavouriteStatus);
+    };
+
+
     return (
         <div className="w-[20vw] flex flex-col card"
-            onClick={() => onClick(note)}
         >
-            <div className="w-full h-[25vh] flex overflow-hidden thumbnail rounded-[18px]">
+            <div
+                onClick={() => onClick(note)}
+                className="w-full h-[25vh] flex overflow-hidden thumbnail rounded-[18px]">
                 <img src={note.thumbnail as string} className="object-cover w-full h-full" alt="Note Project Image"/>
             </div>
             <div className="flex items-center justify-between mt-[15px] px-2">
@@ -43,7 +61,11 @@ const NoteCard = ({note , onClick} : NoteProps) => {
             <h3 className="text-[#000] font-[400] text-[16px] px-2">{noteNameReducer(note.title)}</h3>
             <div className="flex justify-end gap-5 mt-3 px-2">
                 <ArrowDownToLine size="20px" />
-                <Star size="20px" />
+                <Star size="20px"
+                    color={isFavourite === "true" ? "#FFD700" : "#000"}
+                      fill={isFavourite === "true" ? "#FFD700" : "#fff"}
+                      onClick={handleChangeFavorite}
+                />
             </div>
         </div>
     )

@@ -1,12 +1,11 @@
-import { Delete, Lock, Plus, RefreshCcw, Unlock } from "lucide-react";
+import {Delete, Loader, Lock, Plus, RefreshCcw, Unlock} from "lucide-react";
 import React, {useState, useRef, useEffect} from "react";
 import ReactQuill from "react-quill";
 import { toolbarOptions } from "./NoteEditor.tsx";
 import { useForm } from "./FormContext.tsx";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store.ts";
-import { updateNote, deleteNote } from "../../reducer/note-slice.ts";
-import { toast } from "react-toastify";
+import {updateNote, deleteNote, changeVisibility} from "../../reducer/note-slice.ts";
 import "react-toastify/dist/ReactToastify.css";
 import {useNavigate} from "react-router-dom";
 import {setLoading} from "../../reducer/loading-slice.ts";
@@ -92,6 +91,11 @@ const ViewNote = () => {
         dispatch(deleteNote({ noteId: formData.noteId as string, jwt_token: jwt_token ?? "" }));
     };
 
+    const handleChangeVisibility = () => {
+        const newVisibility = formData.visibility === "public" ? "private" : "public";
+        dispatch(changeVisibility({ noteId: formData.noteId as string, visibility: newVisibility, jwt_token: jwt_token ?? "" }));
+    }
+
     return (
         <div id="viewNote">
             <div className="flex justify-end">
@@ -145,7 +149,10 @@ const ViewNote = () => {
                     )}
                 </div>
                 <div className="flex gap-10 mt-10 mb-14">
-                    <button className="w-[6vw] h-[3vh] border-2 rounded-lg">
+                    <button
+                        onClick={handleChangeVisibility}
+                        className="w-[6vw] h-[3vh] border-2 rounded-lg">
+                        { loading ? <Loader className="animate-spin w-5 h-5" /> : null }
                         {formData.visibility === "public" ? "Make Private" : "Make Public"}
                     </button>
                     <button

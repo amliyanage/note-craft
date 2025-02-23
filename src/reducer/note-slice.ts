@@ -88,6 +88,44 @@ export const deleteNote = createAsyncThunk(
     }
 )
 
+export const changeVisibility = createAsyncThunk(
+    "note/change-visibility",
+    async ({ noteId, visibility, jwt_token }: { noteId: string, visibility: string, jwt_token: string }) => {
+        try {
+            const response = await api.put(`/note/changeVisibility/${noteId}`, { visibility }, {
+                headers: {
+                    Authorization: `Bearer ${jwt_token}`,
+                }
+            });
+            return {
+                comingStatus: response.status,
+                ...response.data
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
+export const chaneFavourite = createAsyncThunk(
+    "note/change-favourite",
+    async ({ noteId, isFavourite, jwt_token }: { noteId: string, isFavourite: string, jwt_token: string }) => {
+        try {
+            const response = await api.put(`/note/changeFavourite/${noteId}`, { isFavourite }, {
+                headers: {
+                    Authorization: `Bearer ${jwt_token}`,
+                }
+            });
+            return {
+                comingStatus: response.status,
+                ...response.data
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
 const noteSlice = createSlice({
     name : "note",
     initialState,
@@ -164,6 +202,52 @@ const noteSlice = createSlice({
                 state.loading = false
                 state.error = action.error.message || ""
                 toast.error("Failed to delete note")
+            })
+        builder
+            .addCase(changeVisibility.pending , (state) => {
+                state.loading = true
+            })
+            .addCase(changeVisibility.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload.comingStatus === 201){
+                    state.notes = state.notes.map(note => {
+                        if (note.noteId === action.payload.noteId){
+                            note.visibility = action.payload.visibility
+                        }
+                        return note
+                    })
+                    toast.success("Visibility changed successfully")
+                }else {
+                    toast.error("Failed to change visibility")
+                }
+            })
+            .addCase(changeVisibility.rejected , (state , action) => {
+                state.loading = false
+                state.error = action.error.message || ""
+                toast.error("Failed to change visibility")
+            })
+        builder
+            .addCase(chaneFavourite.pending , (state) => {
+                state.loading = true
+            })
+            .addCase(chaneFavourite.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload.comingStatus === 201){
+                    state.notes = state.notes.map(note => {
+                        if (note.noteId === action.payload.noteId){
+                            note.isFavourite = action.payload.isFavourite
+                        }
+                        return note
+                    })
+                    toast.success("Favourite changed successfully")
+                }else {
+                    toast.error("Failed to change favourite")
+                }
+            })
+            .addCase(chaneFavourite.rejected , (state , action) => {
+                state.loading = false
+                state.error = action.error.message || ""
+                toast.error("Failed to change favourite")
             })
     }
 })
