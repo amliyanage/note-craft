@@ -24,7 +24,8 @@ const LoginForm = () => {
     useEffect(() => {
         console.log("isAuth", isAuth)
         if(isAuth){
-            navigate("/dashboard")
+            dispatch(setLoading(false))
+            //navigate("/dashboard")
         }
     }, [isAuth]);
 
@@ -36,6 +37,7 @@ const LoginForm = () => {
             password: password
         }
         dispatch(loginUser(loginData))
+        setTempLoading(false)
     }
 
     useEffect(() => {
@@ -45,11 +47,12 @@ const LoginForm = () => {
     useEffect(() => {
         if(isLoading){
             dispatch(setLoading(true))
-        } else if (!isLoading && tempLoading){
+        } else if (!isLoading && !tempLoading){
             dispatch(setLoading(false))
+            console.log("Navigating to dashboard")
             navigate("/dashboard")
         }
-    }, []);
+    }, [isLoading]);
 
     const responseGoogle = async (response: CredentialResponse) => {
         if (!response.credential) {
@@ -63,6 +66,7 @@ const LoginForm = () => {
             token: token
         } as { token: string };
         dispatch(googleLogin(sendToken));
+        setTempLoading(false)
     };
 
     const responseGoogleError = (response: CredentialResponse) => {
