@@ -126,6 +126,22 @@ export const chaneFavourite = createAsyncThunk(
     }
 )
 
+export const getPublicNotes = createAsyncThunk(
+    "note/get-public-notes",
+    async ({jwt_token} : {jwt_token : string}) => {
+        try {
+            const response = await api.get("/note/getPublicNotes", {
+                headers: {
+                    Authorization: `Bearer ${jwt_token}`
+                }
+            });
+            return response.data
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
 const noteSlice = createSlice({
     name : "note",
     initialState,
@@ -248,6 +264,18 @@ const noteSlice = createSlice({
                 state.loading = false
                 state.error = action.error.message || ""
                 toast.error("Failed to change favourite")
+            })
+        builder
+            .addCase(getPublicNotes.pending , (state) => {
+                state.loading = true
+            })
+            .addCase(getPublicNotes.fulfilled , (state , action) => {
+                state.loading = false
+                state.notes = action.payload
+            })
+            .addCase(getPublicNotes.rejected , (state , action) => {
+                state.loading = false
+                state.error = action.error.message || ""
             })
     }
 })

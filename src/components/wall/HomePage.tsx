@@ -4,9 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store.ts";
-import { getAllUserNotes } from "../../reducer/note-slice.ts";
+import {getAllUserNotes, getPublicNotes} from "../../reducer/note-slice.ts";
 import { Note } from "../../model/Note.ts";
 import { useForm } from "./FormContext.tsx";
+import {setLoading} from "../../reducer/loading-slice.ts";
 
 const HomePage = () => {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ const HomePage = () => {
     const [selectedDate, setSelectedDate] = useState<string>("");
     const [visibilityFilter, setVisibilityFilter] = useState<string>("");
     const [showFilterPopup, setShowFilterPopup] = useState<boolean>(false);
+    const [isClickOnPublic, setIsClickOnPublic] = useState<boolean>(false);
 
     useEffect(() => {
         dispatch(
@@ -92,6 +94,23 @@ const HomePage = () => {
         );
     });
 
+    function loadGlobalNotes() {
+        setTempLoading(true);
+        setIsClickOnPublic(!isClickOnPublic);
+        if (isClickOnPublic) {
+            dispatch(getPublicNotes(
+                { jwt_token: jwt_token ?? "" }
+            ));
+        } else {
+            dispatch(
+                getAllUserNotes({
+                    username: username ?? "",
+                    jwt_token: jwt_token ?? "",
+                })
+            );
+        }
+    }
+
 
     return (
         <div>
@@ -158,9 +177,13 @@ const HomePage = () => {
                         <ListFilter color="#828282" size="18px" />
                     </div>
                 </div>
-                <div className="flex gap-8">
+                <div className="flex gap-8"
+                    onClick={loadGlobalNotes}
+                >
                     <button className="w-[50px] h-[50px] flex justify-center items-center border-[#000] rounded-full border-[1.5px]">
-                        <Globe color="#000" size="18px" />
+                        {
+                            isClickOnPublic ? <Globe color="#000" size="18px" /> : <Globe color="#828282" size="18px" />
+                        }
                     </button>
                     <button
                         className={`h-[50px] flex justify-center items-center rounded-[12px] px-5 gap-3 border-[1.5px] ${
