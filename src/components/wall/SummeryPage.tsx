@@ -70,7 +70,7 @@ const SummeryPage = () => {
     }, [text]);
 
     const handleSave = () => {
-        setEditLoading(true);
+        setTempLoading(true);
         const sendFormData = new FormData();
         sendFormData.append("thumbnail", formData.thumbnail as File);
         sendFormData.append("title", formData.title as string);

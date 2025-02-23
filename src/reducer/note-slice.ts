@@ -69,6 +69,25 @@ export const updateNote = createAsyncThunk(
     }
 )
 
+export const deleteNote = createAsyncThunk(
+    "note/delete-note",
+    async ({ noteId, jwt_token }: { noteId: string, jwt_token: string }) => {
+        try {
+            const response = await api.delete(`/note/delete/${noteId}`, {
+                headers: {
+                    Authorization: `Bearer ${jwt_token}`,
+                }
+            });
+            return {
+                comingStatus: response.status,
+                ...response.data
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+)
+
 const noteSlice = createSlice({
     name : "note",
     initialState,
@@ -92,7 +111,7 @@ const noteSlice = createSlice({
                 state.loading = false
                 state.error = action.error.message || ""
                 toast.error("Failed to save note")
-            }) ,
+            })
         builder
             .addCase(getAllUserNotes.pending , (state) => {
                 state.loading = true
@@ -127,6 +146,24 @@ const noteSlice = createSlice({
                 state.loading = false
                 state.error = action.error.message || ""
                 toast.error("Failed to update note")
+            })
+        builder
+            .addCase(deleteNote.pending , (state) => {
+                state.loading = true
+            })
+            .addCase(deleteNote.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload.comingStatus === 201){
+                    state.notes = state.notes.filter(note => note.noteId !== action.payload.noteId)
+                    toast.success("Note deleted successfully")
+                }else {
+                    toast.error("Failed to delete note")
+                }
+            })
+            .addCase(deleteNote.rejected , (state , action) => {
+                state.loading = false
+                state.error = action.error.message || ""
+                toast.error("Failed to delete note")
             })
     }
 })

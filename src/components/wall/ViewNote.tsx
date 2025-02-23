@@ -1,11 +1,15 @@
 import { Delete, Lock, Plus, RefreshCcw, Unlock } from "lucide-react";
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import ReactQuill from "react-quill";
 import { toolbarOptions } from "./NoteEditor.tsx";
 import { useForm } from "./FormContext.tsx";
-import {useDispatch, useSelector} from "react-redux";
-import {AppDispatch, RootState} from "../../store/store.ts";
-import {updateNote} from "../../reducer/note-slice.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store.ts";
+import { updateNote, deleteNote } from "../../reducer/note-slice.ts";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import {useNavigate} from "react-router-dom";
+import {setLoading} from "../../reducer/loading-slice.ts";
 
 const ViewNote = () => {
     const dispatch = useDispatch<AppDispatch>();
@@ -16,8 +20,25 @@ const ViewNote = () => {
     const [isChangeImage, setIsChangeImage] = useState<boolean>(false);
     const [thumbnail, setThumbnail] = useState<File | null>(null);
     const jwt_token = useSelector((state: RootState) => state.userReducer.jwt_token);
-
     const loading = useSelector((state: RootState) => state.noteReducer.loading);
+    const [tempLoading, setTempLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+
+    useEffect(() => {
+        setTempLoading(true)
+    }, [!loading]);
+
+    useEffect(() => {
+        if (loading) {
+            dispatch(setLoading(true))
+        } else if (!loading && tempLoading) {
+            setTempLoading(false)
+            dispatch(setLoading(false))
+            navigate('/dashboard');
+        }
+    }, [loading]);
+
 
     const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
         updateFormData("title", e.target.value);
@@ -54,14 +75,21 @@ const ViewNote = () => {
         formDataToSend.append("isFavourite", formData.isFavourite);
         formDataToSend.append("status", formData.status);
         formDataToSend.append("userName", formData.userName);
-        console.log(isChangeImage);
+
         if (isChangeImage) {
             formDataToSend.append("thumbnail", formData.thumbnail);
         } else {
             formDataToSend.append("thumbnail", "N/A");
         }
 
-        dispatch(updateNote({ note: formDataToSend, jwt_token: jwt_token ?? "" }));
+        dispatch(updateNote({ note: formDataToSend, jwt_token: jwt_token ?? "" }))
+    };
+
+    const handleDelete = async () => {
+        const confirmDelete = window.confirm("Are you sure you want to delete this note?");
+        if (!confirmDelete) return;
+        setTempLoading(true);
+        dispatch(deleteNote({ noteId: formData.noteId as string, jwt_token: jwt_token ?? "" }));
     };
 
     return (
@@ -128,7 +156,10 @@ const ViewNote = () => {
                         <RefreshCcw size={18} />
                         {loading ? "Updating..." : "Update"}
                     </button>
-                    <button className="flex gap-2 justify-center items-center w-[6vw] h-[3vh] border-2 rounded-lg">
+                    <button
+                        onClick={handleDelete}
+                        className="flex gap-2 justify-center items-center w-[6vw] h-[3vh] border-2 rounded-lg text-red-500 border-red-500 hover:bg-red-500 hover:text-white"
+                    >
                         <Delete size={18} />
                         Delete
                     </button>

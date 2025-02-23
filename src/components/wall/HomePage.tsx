@@ -36,6 +36,18 @@ const HomePage = () => {
     }, [isLoading]);
 
     const openCreateNote = () => {
+
+        updateFormData("title" , "" )
+        updateFormData("noteBody" , "" )
+        updateFormData("noteId" , "" )
+        updateFormData("date" , "" )
+        updateFormData("summery" ,"" )
+        updateFormData("thumbnail" , "" )
+        updateFormData("isFavourite" , "")
+        updateFormData("visibility" , "")
+        updateFormData("status" , "")
+        updateFormData("userName" , "")
+
         navigate("/dashboard/save");
     };
 
