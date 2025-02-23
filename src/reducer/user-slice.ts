@@ -101,6 +101,27 @@ export const CheckOTP = createAsyncThunk(
     }
 )
 
+export const refreshToken = createAsyncThunk(
+    "user/refresh-token",
+    async (refreshToken: string) => {
+        try {
+            const response = await api.post("/auth/refresh-token", {}, {
+                headers: {
+                    "Authorization": `Bearer ${refreshToken}`
+                },
+                withCredentials: true
+            });
+            return {
+                status: response.status,
+                ...response.data
+            };
+        } catch (error) {
+            console.log(error);
+        }
+    }
+);
+
+
 const userSlice = createSlice({
     name: "userReducer",
     initialState,
@@ -232,6 +253,25 @@ const userSlice = createSlice({
                 state.error = action.payload as string;
                 state.forgotPassword = false
                 toast.error("Invalid OTP")
+            })
+        builder
+            .addCase(refreshToken.pending , (state) => {
+                console.log("Refreshing Token")
+                state.loading = true
+            })
+            .addCase(refreshToken.fulfilled , (state , action) => {
+                state.loading = false
+                if (action.payload && action.payload.status === 201){
+                    state.isAuthenticated = true
+                    state.jwt_token = action.payload.token
+                } else {
+                    console.log("Error Refreshing Token")
+                }
+            })
+            .addCase(refreshToken.rejected , (state, action) => {
+                console.log("Error Refreshing Token")
+                state.loading = false
+                state.error = action.payload as string;
             })
     }
 })
